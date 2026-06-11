@@ -1,5 +1,5 @@
 const connectDB = require("./db.cjs");
-const Product = require("./Product.cjs");
+const Product = require("./models/Product.cjs");
 
 exports.handler = async (event) =>{
     await connectDB();
