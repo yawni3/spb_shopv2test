@@ -1,11 +1,10 @@
 const connectDB = require("./db.cjs");
 const Product = require("./models/Product.cjs");
 
-exports.handler = async (event) =>{
+exports.handler = async (event) => {
     await connectDB();
 
-    //product list
-    if(eveny.httpMethod === "GET"){
+    if (event.httpMethod === "GET") {
         try {
             const products = await Product.find();
             return {
@@ -15,14 +14,13 @@ exports.handler = async (event) =>{
         } catch (err) {
             return {
                 statusCode: 500,
-                body: JSON.stringify({ message: "Ürünler alınırken hata oluştu", error: err.message })
+                body: JSON.stringify({ error: err.message })
             };
         }
     }
 
-    //Ürün ekleme
-    if (event.httpMethod === "POST"){
-        try{
+    if (event.httpMethod === "POST") {
+        try {
             const data = JSON.parse(event.body);
             const product = new Product(data);
             await product.save();
@@ -33,7 +31,7 @@ exports.handler = async (event) =>{
         } catch (err) {
             return {
                 statusCode: 500,
-                body: JSON.stringify({ message: "Ürün eklenirken hata oluştu", error: err.message })
+                body: JSON.stringify({ error: err.message })
             };
         }
     }

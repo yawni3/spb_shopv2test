@@ -1,4 +1,4 @@
-const mongoose = reqire('mongoose');
+const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
     costumerEmail: { type:String, required: true},
