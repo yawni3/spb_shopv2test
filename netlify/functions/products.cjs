@@ -8,7 +8,7 @@ exports.handler = async (event) => {
         try {
             const products = await Product.find();
             return {
-                statusCode: 200,
+                statusCode: 200,   
                 body: JSON.stringify(products)
             };
         } catch (err) {
