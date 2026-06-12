@@ -10,11 +10,10 @@ const adminSchema = new mongoose.Schema({
 
 const Admin = mongoose.models.Admin || mongoose.model("Admin", adminSchema);
 
-
-const headers ={
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type"
+const headers = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization"
 };
 
 exports.handler = async (event) => {
@@ -22,9 +21,10 @@ exports.handler = async (event) => {
     return { statusCode: 200, headers, body: "" };
   }
 
-   if (event.httpMethod !== "POST") {
+  if (event.httpMethod !== "POST") {
     return { statusCode: 405, headers, body: JSON.stringify({ error: "Method not allowed" }) };
   }
+
   await connectDB();
 
   try {
@@ -32,12 +32,12 @@ exports.handler = async (event) => {
     const admin = await Admin.findOne({ email });
 
     if (!admin) {
-      return { statusCode: 401, body: JSON.stringify({ error: "Hatalı email veya şifre" }) };
+      return { statusCode: 401, headers, body: JSON.stringify({ error: "Hatalı email veya şifre" }) };
     }
 
     const isMatch = await bcrypt.compare(password, admin.password);
     if (!isMatch) {
-      return { statusCode: 401, body: JSON.stringify({ error: "Hatalı email veya şifre" }) };
+      return { statusCode: 401, headers, body: JSON.stringify({ error: "Hatalı email veya şifre" }) };
     }
 
     const token = jwt.sign(
@@ -48,9 +48,10 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
+      headers,
       body: JSON.stringify({ token })
     };
   } catch (err) {
-    return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
+    return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
   }
 };
