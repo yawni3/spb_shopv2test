@@ -11,7 +11,8 @@ const productSchema = new mongoose.Schema({
     category: { type: String},
     fileUrl: { type: String},
     active: {type: Boolean, default: true},
-    createdAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
+    version: { type: String, default: "" }
 });
 
 module.exports = mongoose.models.Product || mongoose.model('Product', productSchema);
